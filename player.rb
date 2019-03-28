@@ -18,11 +18,12 @@ class Player
   def get_name
     @player[:name]
   end
-
+  def get_level
+    @player[:stats][:level]
+  end
   def get_armour()
     @player[:stats][:armour]
   end
-
   def get_attack()
     @player[:stats][:attack]
   end
@@ -78,7 +79,11 @@ class Player
   end
 
   def print_inventory
-
+    @player[:inventory].each do |item_name, item_stats|
+      item_name.each do |stat_name, stat_value|
+        puts("#{Prettify::capitalize(stat_name)}: #{stat_value}")
+      end
+    end
   end
 
   def display_stats
@@ -145,9 +150,10 @@ class Player
           }
         },
         weapon: {
-          "Long Shlong": {
+          "Petty Sword": {
             armour: 0,
-            attack: 50
+            attack: 5,
+            price: 10
           }
         }
       },

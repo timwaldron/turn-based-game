@@ -19,34 +19,47 @@ module Battle
     while @battle_won == nil
       print `clear`
       puts(@player.get_name)
-      puts("#{@player_hp}/#{@player.get_maxhealth}")
-      puts("Att: #{@player.get_attack} | Arm: #{@player.get_armour}")
+      puts("Level: #{@player.get_level}")
+      puts("Health: #{@player_hp}/#{@player.get_maxhealth}")
+      puts("Attack: #{@player.get_attack} | Armour: #{@player.get_armour}")
       puts
       puts(@enemy[:name])
-      puts("#{@enemy_hp}/#{@enemy[:stats][:maxhealth]}")
+      puts("Level: #{@enemy[:stats][:level]}")
+      puts("Health: #{@enemy_hp}/#{@enemy[:stats][:maxhealth]}")
+      puts("Attack: #{@enemy[:stats][:attack]} | Armour: #{@enemy[:stats][:armour]}")
       puts('')
       puts('1: Attack')
       puts('2: Potion (3/3)')
       puts('3: Special Attack')
       puts('')
       print('Option: ')
-      user_input = gets().strip.to_i
+      user_input = gets.strip.to_i
 
-      while(user_input < 1 || user_input > 3)
+      while user_input < 1 || user_input > 3
         print('Option: ')
-        user_input = gets().strip.to_i
+        user_input = gets.strip.to_i
       end
 
       case user_input
       when 1
         player_attack
       when 2
+        use_potion
       when 3
+        use_special
       end
 
       print 'Press return to continue...'
-      gets()
+      gets
     end
+  end
+
+  def self.use_special
+    # code here
+  end
+
+  def self.use_potion
+    # code here
   end
 
   def self.player_attack
@@ -88,5 +101,9 @@ module Battle
       name: gen_name,
       stats: { level: en_level, maxhealth: 100, attack: 5, armour: 5 }
     }
+  end
+
+  def self.generate_loot
+   
   end
 end
