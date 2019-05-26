@@ -1,9 +1,10 @@
-require './prettify'
-require './battle'
-require './stats'
-require './skills'
-require './shops'
-require './player'
+require_relative 'prettify'
+require_relative 'battle'
+require_relative 'stats'
+require_relative 'skills'
+require_relative 'shops'
+require_relative 'player'
+require_relative 'enemy'
 
 # Main class of the game, run this file
 class TurnBasedGame
@@ -12,9 +13,20 @@ class TurnBasedGame
   include Stats
   include Skills
   include Shops
+  include Enemy
 
   def initialize
+    login_account
     splash_menu
+  end
+
+  def login_account
+    # print("Please enter a username:")
+    # user_name = gets().strip
+  
+    # while(user_name.include?("^a-zA-Z"))
+
+    # user_name.delete("^a-zA-Z0-9") #=> abcABC123
   end
 
   # @return [Object]
@@ -27,14 +39,14 @@ class TurnBasedGame
 
   # @return [Loads the main menu]
   def main_menu
-    @player = Player.new('Tim')
+    @player = Player.new('Ruby')
 
     loop do
       print(`clear`)
       puts('What would you like to do?')
       puts('')
-      puts('1. Go to battle')
-      puts('2. Player Stats')
+      puts('1. Go To Battle')
+      puts('2. Player Menu')
       puts('3. Skill Menu')
       puts('4. Shops')
       puts('')
@@ -52,7 +64,7 @@ class TurnBasedGame
       when 1
         Battle.load_battle(@player)
       when 2
-        @player.display_stats
+        @player.player_menu
       when 3
         Skills.load_skills
       when 4

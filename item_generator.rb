@@ -1,20 +1,18 @@
 module ItemGenerator
 
-  def generate_loot(player_instance)
+  def self.generate_loot(player_instance)
     @player = player_instance # Use this for generating "Item Levels"
-    # "Dusty Boot": { price: 5 },
-    # weapon: { "Petty Sword": { armour: 0, attack: 5, price: 10 }
-    # item: {name: }
-
     rarity = roll_rarity()
-    type = roll_type()
     prefix = roll_equipment_prefix(rarity)
+    type = roll_type()
     name = roll_name(type, rarity)
+    stats = roll_stats(@player.get_level(), rarity, type)
 
-    return {name: prefix + " " + name, type: type, rarity: rarity}
+    item = {name: prefix + " " + name, level: @player.get_level(), slot: type, rarity: rarity, stats: stats}
+    return item
   end
 
-  def roll_rarity()
+  def self.roll_rarity()
     item_rarity_roll = rand(0..100)
 
     case item_rarity_roll
@@ -31,12 +29,12 @@ module ItemGenerator
     end
   end
 
-  def roll_type()
+  def self.roll_type()
     item_type_roll = rand(0..100)
 
     case item_type_roll
     when 0...60
-      return "junk"
+      return "inventory" # Junk, sellable
     when 60...70
       return "head"
     when 70...80
@@ -48,19 +46,40 @@ module ItemGenerator
     end
   end
 
-
-  def price_formula()
-
+  def self.rarity_scale(rarity)
+    case rarity
+    when "common"
+      return 1
+    when "uncommon"
+      return 1.25
+    when "rare"
+      return 1.5
+    when "epic"
+      return 2
+    when "legendary"
+      return 3
+    end
   end
 
-  def roll_stats()
+  def self.roll_stats(player_level, rarity, type)
+    price_formula = (5 * (player_level + 5) * rand(1.0..2.0).round(2)) * rarity_scale(rarity)
 
+    case type
+    when "inventory"
+      return {price: price_formula.to_i}
+    when "weapon"
+      attack_formula = (5 * (player_level) * rand(1.0..2.0).round(2)) * rarity_scale(rarity)
+
+      return {attack: attack_formula.to_i, price: price_formula.to_i}
+    else # Must be either head, chest or legs (or shields maybe soon)
+      armour_formula = ((5 * (player_level) * rand(1.0..2.0).round(2)) * rarity_scale(rarity) / 2)
+      return {armour: armour_formula.to_i, price: price_formula.to_i}
+    end
   end
 
-  def roll_name(equipment_type, rarity)
-
+  def self.roll_name(equipment_type, rarity)
     case equipment_type
-    when "junk"
+    when "inventory"
       case rarity
       when "common"
         return ["Boot", "Rag", "Book", "Rope", "Chair"].sample()
@@ -86,7 +105,7 @@ module ItemGenerator
     end
   end
 
-  def roll_equipment_prefix(rarity)
+  def self.roll_equipment_prefix(rarity)
     name_builder = ""
 
     case rarity

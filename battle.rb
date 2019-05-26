@@ -1,9 +1,13 @@
 # frozen_string_literal: true
 
-require './player'
+require_relative 'player'
+require_relative 'enemy'
+require_relative 'item_generator'
 
 # Module to go load a battle
 module Battle
+  include ItemGenerator
+  include Enemy
 
   def self.load_battle(player_instance)
     @player = player_instance
@@ -11,7 +15,7 @@ module Battle
   end
 
   def self.go_to_battle
-    @enemy = generate_enemy
+    @enemy = Enemy.load_stats
     @player_hp = @player.get_maxhealth
     @enemy_hp = @enemy[:stats][:maxhealth]
     @battle_won = nil
@@ -19,12 +23,12 @@ module Battle
     while @battle_won == nil
       print `clear`
       puts(@player.get_name)
-      puts("Level: #{@player.get_level}")
+      puts("Level:  #{@player.get_level}")
       puts("Health: #{@player_hp}/#{@player.get_maxhealth}")
       puts("Attack: #{@player.get_attack} | Armour: #{@player.get_armour}")
       puts
       puts(@enemy[:name])
-      puts("Level: #{@enemy[:stats][:level]}")
+      puts("Level:  #{@enemy[:stats][:level]}")
       puts("Health: #{@enemy_hp}/#{@enemy[:stats][:maxhealth]}")
       puts("Attack: #{@enemy[:stats][:attack]} | Armour: #{@enemy[:stats][:armour]}")
       puts('')
@@ -49,6 +53,8 @@ module Battle
         use_special
       end
 
+      award_loot() if @battle_won == true
+
       print 'Press return to continue...'
       gets
     end
@@ -63,17 +69,17 @@ module Battle
   end
 
   def self.player_attack
-    damage = @player.get_attack + rand(0..10) - @enemy[:stats][:armour]
+    damage = @player.get_attack + rand(0..10)# - @enemy[:stats][:armour]
     @enemy_hp -= damage
-    puts("You attack the #{@enemy[:name]} with your #{@player.get_weapon} for #{damage} damage")
+    puts("You attack the #{@enemy[:name]} for #{damage} damage, #{@enemy[:name]} is on #{@enemy_hp} health")
     calculate_win_lose
     enemy_attack if @battle_won == nil
   end
 
   def self.enemy_attack
-    damage = (@enemy[:stats][:attack] + rand(0..10)) - @player.get_armour
+    damage = (@enemy[:stats][:attack] + rand(0..10)) # - @player.get_armour
     @player_hp -= damage
-    puts("The #{@enemy[:name]} attacks you back for #{damage} damage")
+    puts("The #{@enemy[:name]} attacks you back for #{damage} damage, you are on #{@player_hp} health")
     calculate_win_lose
   end
 
@@ -97,13 +103,20 @@ module Battle
     en_level = 1 if en_level < 1
 
     # Returns this hash, doesn't need to be defined
-    enemy = {
-      name: gen_name,
-      stats: { level: en_level, maxhealth: 100, attack: 5, armour: 5 }
-    }
+    return Enemy.load_stats()
   end
 
-  def self.generate_loot
-   
+  def scale_difference()
+
+  end
+
+  def self.award_loot()
+    loot = ItemGenerator.generate_loot(@player)
+    @player.give_item(loot)
+    puts("")
+    puts("You have obtained an item!")
+    puts("")
+    puts("Item Hash: #{loot}") # To do: tidy up
+    puts("")
   end
 end
