@@ -1,10 +1,10 @@
-require_relative 'prettify'
-require_relative 'battle'
-require_relative 'stats'
-require_relative 'skills'
-require_relative 'shops'
-require_relative 'player'
-require_relative 'enemy'
+require_relative './src/prettify'
+require_relative './src/battle'
+require_relative './src/stats'
+require_relative './src/skills'
+require_relative './src/shops'
+require_relative './src/player'
+require_relative './src/enemy'
 
 # Main class of the game, run this file
 class TurnBasedGame

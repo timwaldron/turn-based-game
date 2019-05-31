@@ -1,4 +1,4 @@
-require './prettify'
+require_relative './prettify'
 
 module Stats
     include Prettify
