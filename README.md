@@ -12,3 +12,19 @@ A simple turn-based I wrote in Ruby (2.5.1).
 
 # How to play?
 Once you've clone this repository, `cd` into it's directory and run the terminal command `ruby main.rb`.
+
+# Screenshots
+## Main Menu:
+![test](./images/tbg-1.png)  
+<br>
+## In Battle:
+![test](./images/tbg-2.png)  
+<br>
+## Player Stats:
+![test](./images/tbg-3.png)  
+<br>
+## Equipping Items:
+![test](./images/tbg-4.png)    
+<br>
+## Current Equipment Menu:
+![test](./images/tbg-5.png)  
